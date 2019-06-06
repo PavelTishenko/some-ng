@@ -1,18 +1,25 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import {del} from 'selenium-webdriver/http';
 
 @Component({
   selector: 'app-checkbox',
-  template: `<input type="checkbox" (change)="checkedOrNo()" />
-             <span *ngIf="valOfCheck">DONE in this date: {{day}}.{{month}}.{{year}}</span>`
+  template: `
+  <ul style="list-style: none">
+      <li *ngFor="let el of objFrom" >{{ el.text }} {{el.some}}<input type="checkbox"/>
+        <span *ngIf="valOfCheck">DONE</span> <button (click)="change(false)">DELETE</button></li>
+  </ul>`
 })
 
 export class CheckboxComponent implements OnInit {
-  valOfCheck = false;
-  date = new Date();
-  day: number = this.date.getDay();
-  month: number = this.date.getMonth();
-  year: number = this.date.getFullYear();
   constructor() {}
+  valOfCheck = false;
+  @Input() objFrom: object[];
+  @Input() some: number;
+  @Input() delVal: boolean;
+    @Output() Changed = new EventEmitter<boolean>();
+    change(inc: any) {
+      this.Changed.emit(inc);
+    }
   ngOnInit(): void {}
   checkedOrNo() {
     this.valOfCheck = !this.valOfCheck; }
